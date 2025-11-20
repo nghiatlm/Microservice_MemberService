@@ -21,6 +21,7 @@ namespace MemberService.API.Middlewares
         {
             "/api/v1/public/register",
             "/api/v1/orders",
+            "/api/v1/checkouts/verify-payment",
         };
 
         public JwtMiddleware(
