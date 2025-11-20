@@ -20,6 +20,8 @@ namespace MemberService.Service.Configuration
             services.AddScoped<IPackageTypeService, PackageTypeService>();
             services.AddScoped<IPackageService, PackageService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IMemberService, Services.MemberService>();
+            services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IPayosService, PayosService>();
             return services;
         }
