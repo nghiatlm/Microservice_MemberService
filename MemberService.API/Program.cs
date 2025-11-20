@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using MemberService.API.Configuration;
 using MemberService.API.Middlewares;
 using MemberService.BO.Common;
+using Net.payOS;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,17 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
+
+var PayOS = builder.Configuration.GetSection("PAYOS");
+var ClientId = Environment.GetEnvironmentVariable("CLIENT_ID") ?? PayOS["CLIENT_ID"];
+var APILEY = Environment.GetEnvironmentVariable("API_KEY") ?? PayOS["API_KEY"];
+var CHECKSUMKEY = Environment.GetEnvironmentVariable("CHECKSUM_KEY") ?? PayOS["CHECKSUM_KEY"];
+
+PayOS payOS = new PayOS(ClientId,
+                    APILEY,
+                    CHECKSUMKEY);
+                    
+builder.Services.AddSingleton(payOS);
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAppDI();

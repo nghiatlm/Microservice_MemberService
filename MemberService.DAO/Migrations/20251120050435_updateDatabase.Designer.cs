@@ -3,6 +3,7 @@ using System;
 using MemberService.DAO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MemberService.DAO.Migrations
 {
     [DbContext(typeof(MemberServiceDbContext))]
-    partial class MemberServiceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251120050435_updateDatabase")]
+    partial class updateDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

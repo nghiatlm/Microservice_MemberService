@@ -10,6 +10,8 @@ namespace MemberService.Service.Configuration
         {
             services.AddScoped<IPackageTypeService, PackageTypeService>();
             services.AddScoped<IPackageService, PackageService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IPayosService, PayosService>();
             return services;
         }
     }

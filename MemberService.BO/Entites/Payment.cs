@@ -33,6 +33,9 @@ namespace MemberService.BO.Entites
         [EnumDataType(typeof(Currency), ErrorMessage = "The Currency field must be a valid Currency value.")]
         public Currency Currency { get; set; } = Currency.VNĐ;
 
+        [Column("transaction_code", TypeName = "varchar(150)")]
+        public string? TransactionCode { get; set; }
+        
         [Column("payment_method", TypeName = "varchar(50)")]
         [Required(ErrorMessage = "The PaymentMethod field is required.")]
         [EnumDataType(typeof(PaymentMethod), ErrorMessage = "The PaymentMethod field must be a valid PaymentMethod value.")]

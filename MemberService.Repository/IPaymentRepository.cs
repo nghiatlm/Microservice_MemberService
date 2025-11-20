@@ -7,6 +7,7 @@ namespace MemberService.Repository
     public interface IPaymentRepository
     {
         Task<Payment?> FindById(int id);
+        Task<Payment?> FindByCode(string code);
         Task<int> Add(Payment entity);
         Task<int> Update(Payment entity);
         Task<int> Delete(Payment entity);

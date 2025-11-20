@@ -26,11 +26,6 @@ namespace MemberService.BO.Entites
         [Required(ErrorMessage = "The AccountId field is required.")]
         public int AccountId { get; set; }
 
-        [Column("transaction_code", TypeName = "varchar(100)")]
-        [Required(ErrorMessage = "The TransactionCode field is required.")]
-        [MaxLength(100, ErrorMessage = "The TransactionCode field cannot exceed 100 characters.")]
-        public string TransactionCode { get; set; } = null!;
-
         [Column("package_id")]
         [Required(ErrorMessage = "The PackageId field is required.")]
         public int PackageId { get; set; }

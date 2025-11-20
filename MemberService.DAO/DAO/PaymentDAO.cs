@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using MemberService.BO.Entites;
+using Microsoft.EntityFrameworkCore;
 
 namespace MemberService.DAO.DAO
 {
@@ -28,6 +29,7 @@ namespace MemberService.DAO.DAO
         }
 
         public async Task<Payment?> FindById(int id) => await _context.Payments.FindAsync(id);
+        public async Task<Payment?> FindByTransactionCode(string code) => await _context.Payments.FirstOrDefaultAsync(p => p.TransactionCode == code);
 
         public IQueryable<Payment> FindQueryable() => _context.Payments.AsQueryable();
 

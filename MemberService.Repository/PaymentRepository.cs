@@ -46,5 +46,7 @@ namespace MemberService.Repository
 
             return new PageResult<Payment>(items, totalItems, totalPages, pageNumber, pageSize);
         }
+
+        public async Task<Payment?> FindByCode(string code) => await PaymentDAO.Instance.FindByTransactionCode(code);
     }
 }

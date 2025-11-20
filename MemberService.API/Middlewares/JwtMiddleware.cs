@@ -20,6 +20,7 @@ namespace MemberService.API.Middlewares
         private static readonly string[] _excludedPaths = new[]
         {
             "/api/v1/public/register",
+            "/api/v1/orders",
         };
 
         public JwtMiddleware(

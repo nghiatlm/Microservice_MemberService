@@ -21,11 +21,6 @@ namespace MemberService.Repository
         {
             var search = OrderDAO.Instance.FindQueryable();
 
-            if (!string.IsNullOrEmpty(query))
-            {
-                search = search.Where(o => o.TransactionCode.Contains(query) || (o.Notes != null && o.Notes.Contains(query)));
-            }
-
             if (accountId.HasValue)
             {
                 search = search.Where(o => o.AccountId == accountId.Value);
