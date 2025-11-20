@@ -39,12 +39,16 @@ namespace MemberService.Repository
             var totalItems = await search.CountAsync();
             var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
             var items = await search
-                .OrderBy(u => u.Id)
+                .OrderByDescending(u => u.CreatedAt)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
             return new PageResult<Package>(items, totalItems, totalPages, pageNumber, pageSize);
         }
+
+        public async Task<Package?> FindByCode(string code) => await PackageDAO.Instance.FindByCode(code);
+
+        public async Task<Package?> FindByName(string name) => await PackageDAO.Instance.FindByName(name);
     }
 }

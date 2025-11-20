@@ -9,6 +9,7 @@ namespace MemberService.Service.Configuration
         public static IServiceCollection AddServiceDI(this IServiceCollection services)
         {
             services.AddScoped<IPackageTypeService, PackageTypeService>();
+            services.AddScoped<IPackageService, PackageService>();
             return services;
         }
     }

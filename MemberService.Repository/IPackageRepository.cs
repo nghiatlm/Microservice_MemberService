@@ -7,6 +7,8 @@ namespace MemberService.Repository
     public interface IPackageRepository
     {
         Task<Package?> FindById(int id);
+        Task<Package?> FindByCode(string code);
+        Task<Package?> FindByName(string name);
         Task<int> Add(Package entity);
         Task<int> Update(Package entity);
         Task<int> Delete(Package entity);
