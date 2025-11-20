@@ -28,9 +28,9 @@ namespace MemberService.DAO.DAO
             _context = new MemberServiceDbContext();
         }
 
-        public async Task<Order?> FindById(int id) => await _context.Orders.Include(o => o.Package).FirstOrDefaultAsync(o => o.Id == id);
+        public async Task<Order?> FindById(int id) => await _context.Orders.Include(o => o.Package).ThenInclude(o => o.PackageType).FirstOrDefaultAsync(o => o.Id == id);
 
-        public IQueryable<Order> FindQueryable() => _context.Orders.AsQueryable();
+        public IQueryable<Order> FindQueryable() => _context.Orders.Include(o => o.Package).ThenInclude(o => o.PackageType).AsQueryable();
 
         public async Task<int> Add(Order entity)
         {

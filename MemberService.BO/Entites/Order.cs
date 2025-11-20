@@ -31,7 +31,7 @@ namespace MemberService.BO.Entites
         public int PackageId { get; set; }
 
         [ForeignKey("PackageId")]
-        public Package? Package { get; set; }
+        public virtual Package? Package { get; set; }
 
         [Column("order_staus", TypeName = "varchar(20)")]
         [Required(ErrorMessage = "The OrderStatus field is required.")]

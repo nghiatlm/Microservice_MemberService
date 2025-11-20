@@ -16,20 +16,24 @@ namespace MemberService.Service.Services
         private readonly IOrderRepository _orderRepository;
         private readonly IPackageRepository _packageRepository;
         private readonly IPayosService _payosService;
+        private readonly IAuthClient _authClient;
         private readonly ILogger<OrderService> _logger;
 
-        public OrderService(IOrderRepository orderRepository, IPackageRepository packageRepository, IPayosService payosService, ILogger<OrderService> logger)
+        public OrderService(IOrderRepository orderRepository, IPackageRepository packageRepository, IPayosService payosService, IAuthClient authClient, ILogger<OrderService> logger)
         {
             _orderRepository = orderRepository;
             _packageRepository = packageRepository;
             _payosService = payosService;
+            _authClient = authClient;
             _logger = logger;
         }
 
-        public async Task<string> Create(OrderRequest request)
+        public async Task<string> Create(OrderRequest request, string token)
         {
             try
             {
+                var accountExists = await _authClient.AccountExistsAsync(request.AccountId, token);
+                if (!accountExists) throw new AppException("Account not found", HttpStatusCode.NotFound);
                 var package = await _packageRepository.FindById(request.PackageId);
                 if (package == null) throw new AppException("Package not found", HttpStatusCode.NotFound);
                 var order = new Order
@@ -78,7 +82,7 @@ namespace MemberService.Service.Services
             }
         }
 
-        public async Task<PageResult<Order>> GetOrders(string? query, int? accountId = null, int? packageId = null, int? orderStatus = null, int pageNumber = 1, int pageSize = 10)
+        public async Task<PageResult<Order>> GetOrders(string? query, int? accountId = null, int? packageId = null, OrderStatus? orderStatus = default, int pageNumber = 1, int pageSize = 10)
         {
             try
             {

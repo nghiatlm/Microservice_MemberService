@@ -1,5 +1,4 @@
 
-
 using System.Net;
 using MemberService.BO.Entites;
 using MemberService.BO.Enums;
@@ -17,14 +16,16 @@ namespace MemberService.Service.Services
         private readonly IOrderRepository _orderRepository;
         private readonly IPackageRepository _packageRepository;
         private readonly IPaymentRepository _paymentRepository;
+        private readonly IMembershipRepository _membershipRepository;
         private readonly ILogger<PayosService> _logger;
 
-        public PayosService(PayOS payOs, IOrderRepository orderRepository, IPackageRepository packageRepository, IPaymentRepository paymentRepository, ILogger<PayosService> logger)
+        public PayosService(PayOS payOs, IOrderRepository orderRepository, IPackageRepository packageRepository, IPaymentRepository paymentRepository, IMembershipRepository membershipRepository, ILogger<PayosService> logger)
         {
             _payOs = payOs;
             _orderRepository = orderRepository;
             _packageRepository = packageRepository;
             _paymentRepository = paymentRepository;
+            _membershipRepository = membershipRepository;
             _logger = logger;
         }
 
@@ -81,6 +82,7 @@ namespace MemberService.Service.Services
                 {
                     payment.PaymentStatus = PaymentStatus.SUCCESS;
                     if (order != null) order.OrderStatus = OrderStatus.SUCCESS;
+                    await CreateMemberShip(order);
                 }
                 else
                 {
@@ -89,6 +91,40 @@ namespace MemberService.Service.Services
                 }
                 await _paymentRepository.Update(payment);
                 if (order != null) await _orderRepository.Update(order);
+                return true;
+            }
+            catch (AppException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error: {Message}", ex.Message);
+                throw new AppException("Internal Server Error", HttpStatusCode.InternalServerError);
+            }
+        }
+
+        public async Task<bool> CreateMemberShip(Order order)
+        {
+            try
+            {
+                var package = await _packageRepository.FindById(order.PackageId);
+                if (package == null) throw new AppException("Package not found", HttpStatusCode.NotFound);
+                var membership = new Membership
+                {
+                    AccountId = order.AccountId,
+                    PackageId = order.PackageId,
+                    PurchaseDate = order.OrderDate,
+                    StartDate = order.OrderDate,
+                    LevelAtPurchase = package.PackageType.Level,
+                    EndDate = DateTime.UtcNow.AddMonths(package.DurationInDays),
+                    PriceAtPurchase = package.Price,
+                    Status = order.OrderStatus == OrderStatus.SUCCESS ? MembershipStatus.ACTIVCE : MembershipStatus.CANCELLED,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                };
+                var result = await _membershipRepository.Add(membership);
+                if (result <= 0) throw new AppException("Create membership failed", HttpStatusCode.InternalServerError);
                 return true;
             }
             catch (AppException)

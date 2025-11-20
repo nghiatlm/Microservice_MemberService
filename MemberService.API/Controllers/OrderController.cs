@@ -1,5 +1,6 @@
 using MemberService.BO.Common;
 using MemberService.BO.Entites;
+using MemberService.BO.Enums;
 using MemberService.BO.Requests;
 using MemberService.BO.Responses;
 using MemberService.Service.Services;
@@ -22,15 +23,19 @@ namespace MemberService.API.Controllers
         }
 
         [HttpPost]
-        // [Authorize(Roles = "ROLE_ADMIN")]
+        [Authorize]
         public async Task<IActionResult> CreateOrder([FromBody] OrderRequest request)
         {
-            var result = await _orderService.Create(request);
+            var authHeader = HttpContext.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+                return BadRequest(ApiResponse<object>.BadRequest("No token"));
+            var token = authHeader["Bearer ".Length..];
+            var result = await _orderService.Create(request, token);
             return result != null ? Ok(ApiResponse<string>.SuccessResponse(result, "Order created")) : BadRequest(ApiResponse<object>.BadRequest("Creation failed"));
         }
 
         [HttpGet("{id}")]
-        // [Authorize(Roles = "ROLE_ADMIN")]
+        [Authorize]
         public async Task<IActionResult> GetOrderById([FromRoute] int id)
         {
             var order = await _orderService.GetById(id);
@@ -39,10 +44,10 @@ namespace MemberService.API.Controllers
         }
 
         [HttpGet]
-        // [Authorize(Roles = "ROLE_ADMIN")]
+        [Authorize]
         public async Task<IActionResult> GetOrders([
             FromQuery] string? query, [FromQuery] int? accountId = default,
-            [FromQuery] int? packageId = default, [FromQuery] int? orderStatus = default,
+            [FromQuery] int? packageId = default, [FromQuery] OrderStatus? orderStatus = default,
             [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             var result = await _orderService.GetOrders(query, accountId, packageId, orderStatus, pageNumber, pageSize);

@@ -39,7 +39,7 @@ namespace MemberService.Repository
             var totalItems = await search.CountAsync();
             var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
             var items = await search
-                .OrderBy(u => u.Id)
+                .OrderByDescending(u => u.CreatedAt)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();

@@ -29,7 +29,10 @@ namespace MemberService.DAO.DAO
         }
 
         public async Task<Payment?> FindById(int id) => await _context.Payments.FindAsync(id);
-        public async Task<Payment?> FindByTransactionCode(string code) => await _context.Payments.FirstOrDefaultAsync(p => p.TransactionCode == code);
+        // Include Order navigation when finding by transaction code and normalize comparison
+        public async Task<Payment?> FindByTransactionCode(string code) => await _context.Payments
+                                 .Include(p => p.Order)
+                                 .FirstOrDefaultAsync(p => p.TransactionCode == code);
 
         public IQueryable<Payment> FindQueryable() => _context.Payments.AsQueryable();
 
