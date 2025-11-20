@@ -17,11 +17,11 @@ namespace MemberService.DAO
 
         private string CustomerConnectionString()
         {
-            var dbHost = Environment.GetEnvironmentVariable("DB_HOST") ?? "35.232.237.179";
-            var dbPort = Environment.GetEnvironmentVariable("DB_PORT") ?? "3308";
+            var dbHost = Environment.GetEnvironmentVariable("DB_HOST") ?? "localhost";
+            var dbPort = Environment.GetEnvironmentVariable("DB_PORT") ?? "3306";
             var dbName = Environment.GetEnvironmentVariable("DB_NAME") ?? "member_service";
             var dbUser = Environment.GetEnvironmentVariable("DB_USER") ?? "root";
-            var dbPass = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "123456";
+            var dbPass = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "Nghia_2003";
             var connectionString = $"Server={dbHost};Port={dbPort};Database={dbName};User Id={dbUser};Password={dbPass};SslMode=Required;";
             return connectionString;
         }
